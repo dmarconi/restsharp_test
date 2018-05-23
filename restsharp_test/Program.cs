@@ -10,7 +10,15 @@ namespace restsharp_test
     {
         static void Main(string[] args)
         {
+            string response = string.Empty;
+
             Console.WriteLine("Hello World!");
+            TestRestClient myclient = new TestRestClient();
+
+            response = myclient.makeTestRequest();
+
+            Console.WriteLine(response);
+
             Console.ReadKey();
         }
     }
