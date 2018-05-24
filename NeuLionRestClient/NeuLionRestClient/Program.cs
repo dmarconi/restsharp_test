@@ -14,7 +14,7 @@ namespace NeuLionRestClient
 
             NLClient client = new NLClient();
 
-            client.GenAuthKey();
+            client.makeGetRequest();
 
             Console.ReadKey();
         }
