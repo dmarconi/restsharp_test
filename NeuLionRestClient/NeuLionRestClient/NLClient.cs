@@ -1,13 +1,44 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using RestSharp;
 using RestSharp.Authenticators;
+using RestSharp.Deserializers;
 
 
 namespace NeuLionRestClient
 {
+    #region XML Deserialiser Classes
+
+    public class Jobs
+    {
+        public List<Job> jobs { get; set; }
+    }
+
+    public class Job
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public string templateName { get; set; }
+        public int selectChannelId { get; set; }
+        public int liveChannelId { get; set; }
+        public bool canStart { get; set; }
+        public bool isEncoding { get; set; }
+        public bool bEnable { get; set; }
+        public int width { get; set; }
+        public int height { get; set; }
+        public float frameRate { get; set; }
+        public int channelCount { get; set; }
+        public int bitsPerSample { get; set; }
+        public int sampleRate { get; set; }
+        public int vodMode { get; set; }
+        public int vodDuration { get; set; }
+    }
+
+    #endregion
+
     class NLClient
     {
         string xauth_key = string.Empty;
@@ -148,14 +179,15 @@ namespace NeuLionRestClient
 
             var client = new RestClient("http://127.0.0.1:8080");
 
+            
+
             //var request = new RestRequest("rest/api_version", Method.GET);
             //var request = new RestRequest("jobs/3", Method.GET);
             //var request = new RestRequest("jobs/3", Method.GET);
-            //var request = new RestRequest("rest/jobs", Method.GET);
+            var request = new RestRequest("rest/jobs", Method.GET);
             //var request = new RestRequest("jobs/3/start", Method.PUT);
 
-            var request = new RestRequest("rest/presets", Method.GET);
-
+            //var request = new RestRequest("rest/presets", Method.GET);
 
             GenAuthKey();
 
@@ -175,7 +207,14 @@ namespace NeuLionRestClient
             Debug.WriteLine(content);
             Debug.WriteLine("---------END RESPONSE CONTENT---------");
 
+            RestSharp.Deserializers.XmlDeserializer deserial = new XmlDeserializer();
 
+            Jobs x = deserial.Deserialize<Jobs>(response);
+
+            string jobname = x.jobs[0].name;
+
+
+            Debug.WriteLine(jobname);
 
             Debug.Unindent();
             Debug.WriteLine("END OF ---- REST Client Get Request");
